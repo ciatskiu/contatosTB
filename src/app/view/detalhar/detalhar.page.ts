@@ -14,6 +14,7 @@ export class DetalharPage implements OnInit {
   contato: Contato;
   indice: number;
   edicao: boolean = true;
+  public imagem : any;
 
   constructor(private router: Router,
     private firebase: FirebaseService) { }
@@ -32,9 +33,19 @@ export class DetalharPage implements OnInit {
     }
   }
 
+  public uploadFile(imagem: any){
+    this.imagem = imagem.files;
+   }
+
   editar(){
     let novo: Contato = new Contato(this.nome, this.telefone);
-    this.firebase.update(novo, this.contato.id);
+    novo.id = this.contato.id;
+    if(this.imagem){
+      this.firebase.uploadImage(this.imagem, novo);
+    }else{
+      novo.downloadURL = this.contato.downloadURL;
+      this.firebase.update(novo, this.contato.id);
+    }
     this.router.navigate(["/home"]);
   }
 

@@ -10,8 +10,9 @@ import { FirebaseService } from 'src/app/model/services/firebase.service';
   styleUrls: ['./cadastrar.page.scss'],
 })
 export class CadastrarPage implements OnInit {
-  public nome! :string;
-  public telefone! : number;
+  public nome :string;
+  public telefone : number;
+  public imagem : any;
 
   constructor(private alertController: AlertController,
     private router : Router,
@@ -20,10 +21,18 @@ export class CadastrarPage implements OnInit {
   ngOnInit() {
   }
 
+ public uploadFile(imagem: any){
+  this.imagem = imagem.files;
+ }
+
   cadastrar(){
     if(this.nome && this.telefone){
       let novo : Contato = new Contato(this.nome, this.telefone);
-      this.firebase.create(novo);
+      if(this.imagem){
+        this.firebase.uploadImage(this.imagem, novo);
+      }else{
+        this.firebase.create(novo);
+      }
       this.presentAlert("Sucesso", "Contato Salvo!");
       this.router.navigate(["/home"]);
     }else{
