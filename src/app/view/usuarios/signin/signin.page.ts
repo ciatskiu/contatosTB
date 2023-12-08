@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertService } from 'src/app/common/alert.service';
+
 
 @Component({
   selector: 'app-signin',
@@ -11,7 +12,7 @@ import { AlertController } from '@ionic/angular';
 export class SigninPage implements OnInit {
   formLogar : FormGroup;
 
-  constructor(private alertController : AlertController,
+  constructor(private alert : AlertService,
     private router : Router, private formBuilder : FormBuilder) {
       this.formLogar = new FormGroup({
         email: new FormControl(''),
@@ -32,7 +33,7 @@ export class SigninPage implements OnInit {
 
   submitForm() : boolean {
     if(!this.formLogar.valid){
-      this.presentAlert('Erro', 'Erro ao Prencher!');
+      this.alert.presentAlert('Erro', 'Erro ao Prencher!');
       return false;
     }else{
       this.logar();
@@ -41,7 +42,7 @@ export class SigninPage implements OnInit {
   }
 
   private logar(){
-    this.presentAlert('Olá', 'Seja bem-vindo!');
+    this.alert.presentAlert('Olá', 'Seja bem-vindo!');
     this.router.navigate(["/home"]);
   }
 
@@ -51,14 +52,6 @@ export class SigninPage implements OnInit {
     this.router.navigate(["/signup"]);
   }
 
-  async presentAlert(subHeader : string, message : string) {
-    const alert = await this.alertController.create({
-      header: 'Agenda de Contatos',
-      subHeader: subHeader,
-      message: message,
-      buttons: ['OK'],
-    });
-    await alert.present();
-  }
+
 
 }
