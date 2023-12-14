@@ -13,31 +13,32 @@ export class FirebaseService {
   constructor(private firestore : AngularFirestore,
     private storage : AngularFireStorage) { }
 
-  read(){
-    return this.firestore.collection(this.PATH)
+  read(uid: string){
+    return this.firestore.collection(this.PATH,
+      ref => ref.where('uid', '==', uid))
     .snapshotChanges();
   }
 
   create(contato: Contato){
     return this.firestore.collection(this.PATH)
-    .add({nome: contato.nome, telefone: contato.telefone});
+    .add({nome: contato.nome, telefone: contato.telefone, uid: contato.uid});
   }
 
   createWithImage(contato: Contato){
     return this.firestore.collection(this.PATH)
     .add({nome: contato.nome, telefone: contato.telefone,
-    downloadURL : contato.downloadURL});
+    downloadURL : contato.downloadURL, uid: contato.uid});
   }
 
   update(contato: Contato, id: string){
     return this.firestore.collection(this.PATH).doc(id)
-    .update({nome: contato.nome, telefone: contato.telefone});
+    .update({nome: contato.nome, telefone: contato.telefone, uid: contato.uid});
   }
 
   updateWithImage(contato: Contato, id: string){
     return this.firestore.collection(this.PATH).doc(id)
     .update({nome: contato.nome, telefone: contato.telefone,
-      downloadURL : contato.downloadURL});
+      downloadURL : contato.downloadURL, uid: contato.uid});
   }
 
   delete(contato: Contato){
