@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService } from 'src/app/common/alert.service';
+import { AuthService } from 'src/app/model/services/auth.service';
 
 
 @Component({
@@ -13,6 +14,7 @@ export class SigninPage implements OnInit {
   formLogar : FormGroup;
 
   constructor(private alert : AlertService,
+    private authService: AuthService,
     private router : Router, private formBuilder : FormBuilder) {
       this.formLogar = new FormGroup({
         email: new FormControl(''),
@@ -42,8 +44,17 @@ export class SigninPage implements OnInit {
   }
 
   private logar(){
-    this.alert.presentAlert('Olá', 'Seja bem-vindo!');
-    this.router.navigate(["/home"]);
+    this.authService
+    .signIn(this.formLogar.value['email'],
+     this.formLogar.value['senha'])
+     .then((res)=>{
+      this.alert.presentAlert('Olá', 'Seja bem-vindo!');
+      this.router.navigate(["/home"]);
+     })
+     .catch((error)=>{
+      this.alert.presentAlert('Erro=', 'Email e/ou Senha Inválidas!');
+      console.log(error.message);
+     })
   }
 
   logarComGoogle(){}
